@@ -15,6 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const uploadResponse = await cloudinary.uploader.upload(file, {
         folder: "dashboard-uploads", // Optional folder for organization
       });
+      console.log('uploadResponse: ', uploadResponse);
 
       return res.status(200).json({ url: uploadResponse.secure_url });
     } catch (error) {

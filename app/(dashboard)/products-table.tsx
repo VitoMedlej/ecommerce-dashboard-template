@@ -35,7 +35,8 @@ export function ProductsTable({
   totalProducts: number;
 }) {
   let router = useRouter();
-
+  
+  console.log('products: ', products);
   let productsPerPage = 5;
   const { newProduct } = useNewProductContext();
   const [currentProducts, setCurrentProducts] = useState(products);
@@ -83,7 +84,7 @@ export function ProductsTable({
           </TableHeader>
           <TableBody>
             {currentProducts && [...currentProducts].reverse().map((product) => (
-              <Product key={product._id} product={product} />
+              <Product key={`${product._id}`} product={product} />
             ))}
           </TableBody>
         </Table>

@@ -1,8 +1,10 @@
 "use client";
 
+import ImageUploader from "@/components/Cloudinary/ImageUploader";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Form from "@radix-ui/react-form";
 import { useAddProductModalContext, useNewProductContext } from "app/context/ContextProvider";
+import { useProductForm } from "app/Hooks/useProductForm";
 import { useState } from "react";
 import { addProduct } from "utils/productApi";
 
@@ -15,7 +17,7 @@ export const inputs = [
 ];
 
 export type ProductData = {
-  [key in typeof inputs[number]["name"] | "category" | "subcategory"]: string | number;
+  [key in typeof inputs[number]["name"] | "category" | "subcategory" | 'images' | '_id' ]: string | number | string[];
 };
 
 export type Category = {
@@ -26,34 +28,26 @@ export type Category = {
 export const initialProductData: ProductData = inputs.reduce((acc, input) => {
   acc[input.name] = input.type === "number" ? "" : "";
   return acc;
-}, { category: "", subcategory: "" } as ProductData);
+}, { category: "", subcategory: "", images:[] } as ProductData);
 
 const AddProductModal = ({ categories }: { categories: Category[] }) => {
+  const { productData, handleChange, uploadedImages, setUploadedImages, setProductData } = useProductForm(initialProductData);
   const { ProductModalOpen, SetProductModalOpen } = useAddProductModalContext();
   const { setNewProduct } = useNewProductContext();
-  const [productData, setProductData] = useState<ProductData>(initialProductData);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setProductData((prev) => ({
-      ...prev,
-      [name]: e.target.type === "number" && value === "" ? "" : value,
-    }));
-  };
 
   const handleSave = async () => {
     try {
-      const result = await addProduct(productData);
-
-      if (!result.success) {
-        throw `${result?.error}`;
-      }
-      if (result.responseObject) {
+      const FinalProduct = {...productData, images:uploadedImages}
+      const result = await addProduct(FinalProduct);
+      console.log('result: ', result);
+      if (result.success) {
         setNewProduct(result.responseObject);
         SetProductModalOpen(false);
+      } else {
+        throw result?.error;
       }
     } catch (error) {
-      alert(`${error}`);
+      alert(error);
     }
   };
 
@@ -136,6 +130,8 @@ const AddProductModal = ({ categories }: { categories: Category[] }) => {
             </Form.Field>
           )}
 
+        <ImageUploader uploadedImages={uploadedImages} setUploadedImages={setUploadedImages}  />
+
           <div className="flex justify-end space-x-4 mt-4">
             <button
               type="button"
@@ -155,3 +151,7 @@ const AddProductModal = ({ categories }: { categories: Category[] }) => {
 };
 
 export default AddProductModal;
+function useProduct(initialProductData: ProductData): { productData: any; handleChange: any; uploadedImages: any; setUploadedImages: any; } {
+  throw new Error("Function not implemented.");
+}
+
