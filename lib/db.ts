@@ -1,72 +1,64 @@
-import 'server-only';
+import { ProductData } from "@/components/Modals/AddProductModal/AddProductModal";
 
-import { neon } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-http';
-import {
-  pgTable,
-  text,
-  numeric,
-  integer,
-  timestamp,
-  pgEnum,
-  serial
-} from 'drizzle-orm/pg-core';
-import { count, eq, ilike } from 'drizzle-orm';
-import { createInsertSchema } from 'drizzle-zod';
+export type IProduct = {
+  _id: string;
+  title: string;
+  description: string;
+  price: number;
+  newPrice: number;
+  category: string;
+  images: string[];
+  createdAt: string;
+  updatedAt: string;
+};
 
-export const db = drizzle(neon(process.env.POSTGRES_URL!));
-
-export const statusEnum = pgEnum('status', ['active', 'inactive', 'archived']);
-
-export const products = pgTable('products', {
-  id: serial('id').primaryKey(),
-  imageUrl: text('image_url').notNull(),
-  name: text('name').notNull(),
-  status: statusEnum('status').notNull(),
-  price: numeric('price', { precision: 10, scale: 2 }).notNull(),
-  stock: integer('stock').notNull(),
-  availableAt: timestamp('available_at').notNull()
-});
-
-export type SelectProduct = typeof products.$inferSelect;
-export const insertProductSchema = createInsertSchema(products);
 
 export async function getProducts(
   search: string,
   offset: number
 ): Promise<{
-  products: SelectProduct[];
+  products: ProductData[];
   newOffset: number | null;
   totalProducts: number;
 }> {
-  // Always search the full table, not per page
-  if (search) {
-    return {
-      products: await db
-        .select()
-        .from(products)
-        .where(ilike(products.name, `%${search}%`))
-        .limit(1000),
-      newOffset: null,
-      totalProducts: 0
-    };
-  }
+  try {
+    const response = await fetch(`${process.env.EXTERNAL_API_URL}/products?search=${search}&offset=${offset}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.TKN}`,
+      }
+    });
 
-  if (offset === null) {
+    if (!response.ok) {
+      throw new Error(`Failed to fetch products: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return {
+      products: data?.responseObject,
+      newOffset: data.newOffset || 12,
+      totalProducts: data?.responseObject?.length,
+    };
+  } catch (error) {
+    console.error('Error fetching products:', error);
     return { products: [], newOffset: null, totalProducts: 0 };
   }
-
-  let totalProducts = await db.select({ count: count() }).from(products);
-  let moreProducts = await db.select().from(products).limit(5).offset(offset);
-  let newOffset = moreProducts.length >= 5 ? offset + 5 : null;
-
-  return {
-    products: moreProducts,
-    newOffset,
-    totalProducts: totalProducts[0].count
-  };
 }
 
-export async function deleteProductById(id: number) {
-  await db.delete(products).where(eq(products.id, id));
+export async function deleteProductById(id: number): Promise<boolean> {
+  try {
+    const response = await fetch(`${process.env.EXTERNAL_API_URL}/products/${id}`, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to delete product: ${response.statusText}`);
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error deleting product:', error);
+    return false;
+  }
 }

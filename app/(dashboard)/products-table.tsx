@@ -16,22 +16,35 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { Product } from './product';
-import { SelectProduct } from '@/lib/db';
+
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { IProduct } from '@/lib/db';
+import { useNewProductContext } from 'app/context/ContextProvider';
+import { useEffect, useState } from 'react';
+import { ProductData } from '@/components/Modals/AddProductModal/AddProductModal';
 
 export function ProductsTable({
   products,
   offset,
-  totalProducts
+  totalProducts,
 }: {
-  products: SelectProduct[];
+  products: ProductData[];
   offset: number;
   totalProducts: number;
 }) {
   let router = useRouter();
+
   let productsPerPage = 5;
+  const { newProduct } = useNewProductContext();
+  const [currentProducts, setCurrentProducts] = useState(products);
+
+  useEffect(() => {
+    if (newProduct) {
+      setCurrentProducts((prev) => [...prev, newProduct]);
+    }
+  }, [newProduct]);
 
   function prevPage() {
     router.back();
@@ -57,20 +70,20 @@ export function ProductsTable({
                 <span className="sr-only">Image</span>
               </TableHead>
               <TableHead>Name</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>In Stock</TableHead>
               <TableHead className="hidden md:table-cell">Price</TableHead>
               <TableHead className="hidden md:table-cell">
                 Total Sales
               </TableHead>
-              <TableHead className="hidden md:table-cell">Created at</TableHead>
+              <TableHead className="hidden md:table-cell">Category</TableHead>
               <TableHead>
                 <span className="sr-only">Actions</span>
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {products.map((product) => (
-              <Product key={product.id} product={product} />
+            {currentProducts && [...currentProducts].reverse().map((product) => (
+              <Product key={product._id} product={product} />
             ))}
           </TableBody>
         </Table>

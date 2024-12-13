@@ -1,6 +1,10 @@
+import ContextWrapper from './context/ContextProvider';
 import './globals.css';
 
 import { Analytics } from '@vercel/analytics/react';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 export const metadata = {
   title: 'Next.js App Router + NextAuth + Tailwind CSS',
@@ -8,15 +12,25 @@ export const metadata = {
     'A user admin dashboard configured with Next.js, Postgres, NextAuth, Tailwind CSS, TypeScript, and Prettier.'
 };
 
-export default function RootLayout({
-  children
+export default  async function RootLayout({
+  children, params
 }: {
   children: React.ReactNode;
+  params : any
 }) {
+
+
+
+ 
   return (
     <html lang="en">
-      <body className="flex min-h-screen w-full flex-col">{children}</body>
+      <body className="flex min-h-screen w-full flex-col">
+      <ContextWrapper>
+        {children}
+      </ContextWrapper>
       <Analytics />
+        </body>
+
     </html>
   );
 }

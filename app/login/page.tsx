@@ -4,7 +4,7 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from '@/components/ui/card';
 import { signIn } from '@/lib/auth';
 
@@ -14,21 +14,37 @@ export default function LoginPage() {
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>
-            This demo uses GitHub for authentication.
-          </CardDescription>
+          <CardDescription>Sign in using your credentials.</CardDescription>
         </CardHeader>
         <CardFooter>
           <form
-            action={async () => {
+            action={async (formData) => {
               'use server';
-              await signIn('github', {
-                redirectTo: '/'
+              const username = formData.get('username')?.toString();
+              const password = formData.get('password')?.toString();
+              await signIn('credentials', {
+                username,
+                password,
+                redirectTo: '/',
               });
             }}
             className="w-full"
           >
-            <Button className="w-full">Sign in with GitHub</Button>
+            <input
+              type="text"
+              name="username"
+              placeholder="Username"
+              className="w-full p-2 mb-2 border"
+              required
+            />
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              className="w-full p-2 mb-2 border"
+              required
+            />
+            <Button className="w-full">Sign in</Button>
           </form>
         </CardFooter>
       </Card>

@@ -24,7 +24,7 @@ export async function User() {
           className="overflow-hidden rounded-full"
         >
           <Image
-            src={user?.image ?? '/placeholder-user.jpg'}
+            src={user?.image ?? 'https://authjs.dev/img/etc/logo-sm.webp'}
             width={36}
             height={36}
             alt="Avatar"

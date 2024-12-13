@@ -12,9 +12,9 @@ export function SearchInput() {
 
   function searchAction(formData: FormData) {
     let value = formData.get('q') as string;
-    let params = new URLSearchParams({ q: value });
+    // let params = new URLSearchParams({ q: value });
     startTransition(() => {
-      router.replace(`/?${params.toString()}`);
+      // router.replace(`/?${params.toString()}`);
     });
   }
 

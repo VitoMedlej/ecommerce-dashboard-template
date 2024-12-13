@@ -10,10 +10,15 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal } from 'lucide-react';
 import { TableCell, TableRow } from '@/components/ui/table';
-import { SelectProduct } from '@/lib/db';
-import { deleteProduct } from './actions';
 
-export function Product({ product }: { product: SelectProduct }) {
+import { deleteProduct } from './actions';
+import { IProduct } from '@/lib/db';
+import { useProductEditModalContext } from 'app/context/ContextProvider';
+import { ProductData } from '@/components/Modals/AddProductModal/AddProductModal';
+
+export function Product({ product }: { product: ProductData }) {
+
+  const { isProductEditModalOpen, setIsProductEditModalOpen } = useProductEditModalContext();
   return (
     <TableRow>
       <TableCell className="hidden sm:table-cell">
@@ -21,20 +26,23 @@ export function Product({ product }: { product: SelectProduct }) {
           alt="Product image"
           className="aspect-square rounded-md object-cover"
           height="64"
-          src={product.imageUrl}
+          src={'https://authjs.dev/img/etc/logo-sm.webp'}
+          // src={product.images[0]}
           width="64"
         />
       </TableCell>
-      <TableCell className="font-medium">{product.name}</TableCell>
+      <TableCell className="font-medium">{product.title}</TableCell>
       <TableCell>
         <Badge variant="outline" className="capitalize">
-          {product.status}
+          true
+          {/* {product.status} */}
         </Badge>
       </TableCell>
       <TableCell className="hidden md:table-cell">{`$${product.price}`}</TableCell>
-      <TableCell className="hidden md:table-cell">{product.stock}</TableCell>
+      <TableCell className="hidden md:table-cell">12</TableCell>
+      {/* <TableCell className="hidden md:table-cell">{product?.stock}</TableCell> */}
       <TableCell className="hidden md:table-cell">
-        {product.availableAt.toLocaleDateString("en-US")}
+        {product.category}
       </TableCell>
       <TableCell>
         <DropdownMenu>
@@ -46,7 +54,7 @@ export function Product({ product }: { product: SelectProduct }) {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DropdownMenuItem className='cursor-pointer' onClick={()=> setIsProductEditModalOpen(true)}>Edit</DropdownMenuItem>
             <DropdownMenuItem>
               <form action={deleteProduct}>
                 <button type="submit">Delete</button>
