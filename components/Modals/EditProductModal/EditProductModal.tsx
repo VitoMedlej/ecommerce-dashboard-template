@@ -10,6 +10,7 @@ import { editProduct } from "utils/productApi";
 import { Categories } from "utils/SanityFunctions";
 
 const ProductEditModal = ({ data , categories }: { data: ProductData, categories : Categories }) => {
+  console.log('data: ', data);
   const { isProductEditModalOpen, setIsProductEditModalOpen } = useProductEditModalContext();
   const [productData, setProductData] = useState<ProductData>(data);
 
@@ -31,7 +32,7 @@ const ProductEditModal = ({ data , categories }: { data: ProductData, categories
       alert(`${error}`);
     }
   };
-
+  if (!data) return <></>
   return (
     <Dialog.Root open={isProductEditModalOpen} onOpenChange={setIsProductEditModalOpen}>
       <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-50 z-50" />
@@ -45,7 +46,7 @@ const ProductEditModal = ({ data , categories }: { data: ProductData, categories
             handleSave();
           }}
         >
-          {inputs.map((input) => (
+          {inputs && inputs.map((input) => (
             <Form.Field key={input.name} name={input.name}>
               <Form.Label className="block text-sm pb-1 font-medium">{input.label}</Form.Label>
               <Form.Control asChild>

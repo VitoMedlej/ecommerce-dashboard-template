@@ -25,29 +25,43 @@ export default async function ProductsPage(
   const searchParams = await props.searchParams;
   const search = searchParams.q ?? '';
   const offset = searchParams.offset ?? 0;
-  const { products, newOffset, totalProducts } = await getProducts(
-    search,
-    Number(offset)
-  );
-const {data : categories} = await fetchSanityCategories()
-console.log('categories: ', categories);
+
+  let productsData, categoriesData;
+  try {
+    productsData = await getProducts(search, Number(offset));
+  } catch (error : any) {
+    console.error('Error loading products:', error.message || error);
+    productsData = { products: [], newOffset: null, totalProducts: 0 };
+  }
+
+  try {
+    const { data: categories } = await fetchSanityCategories();
+    categoriesData = categories || [];
+  } catch (error : any) {
+    console.error('Error loading categories:', error.message || error);
+    categoriesData = [];
+  }
+
+  const { products, newOffset, totalProducts } = productsData;
 
   return (
     <>
       <Tabs defaultValue="all">
         <DashboardOptions />
         <TabsContent value="all">
-   
-          <ProductsTable
-            products={products}
-            offset={newOffset ?? 0}
-            totalProducts={totalProducts}
-          />
+          {products.length > 0 ? (
+            <ProductsTable
+              products={products}
+              offset={newOffset ?? 0}
+              totalProducts={totalProducts}
+            />
+          ) : (
+            <div>No products available</div>
+          )}
         </TabsContent>
       </Tabs>
       
-      <ProductModals categories={categories} productToEdit={products[0]}/>
-   
+      <ProductModals categories={categoriesData} productToEdit={products[0]} />
     </>
   );
 }

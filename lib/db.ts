@@ -21,28 +21,31 @@ export async function getProducts(
   newOffset: number | null;
   totalProducts: number;
 }> {
+  const defaultResponse = { products: [], newOffset: null, totalProducts: 0 };
+
   try {
     const response = await fetch(`${process.env.EXTERNAL_API_URL}/products?search=${search}&offset=${offset}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${process.env.TKN}`,
-      }
+      },
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch products: ${response.statusText}`);
+    if (!response.ok || !response.headers.get('content-type')?.includes('application/json')) {
+      console.warn('Invalid or non-JSON response received.');
+      return defaultResponse;
     }
 
     const data = await response.json();
     return {
-      products: data?.responseObject,
-      newOffset: data.newOffset || 12,
-      totalProducts: data?.responseObject?.length,
+      products: data?.responseObject || [],
+      newOffset: data?.newOffset || 12,
+      totalProducts: data?.responseObject?.length || 0,
     };
-  } catch (error) {
-    console.error('Error fetching products:', error);
-    return { products: [], newOffset: null, totalProducts: 0 };
+  } catch (error : any)  {
+    console.warn('Error fetching products:', error.message || error);
+    return defaultResponse;
   }
 }
 
