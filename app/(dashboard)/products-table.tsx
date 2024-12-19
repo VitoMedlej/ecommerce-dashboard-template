@@ -21,31 +21,49 @@ import { useRouter } from 'next/navigation';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { IProduct } from '@/lib/db';
-import { useNewProductContext } from 'app/context/ContextProvider';
+import { useCurrentProductContext } from 'app/context/ContextProvider';
 import { useEffect, useState } from 'react';
-import { ProductData } from '@/components/Modals/AddProductModal/AddProductModal';
+import AddProductModal, { ProductData } from '@/components/Modals/AddProductModal/AddProductModal';
+
+import { Categories } from 'utils/SanityFunctions';
+import EditProductModal from '@/components/Modals/EditProductModal/EditProductModal';
 
 export function ProductsTable({
   products,
   offset,
   totalProducts,
+  categories
 }: {
   products: ProductData[];
   offset: number;
   totalProducts: number;
+  categories:Categories | null;
 }) {
   let router = useRouter();
   
-  console.log('products: ', products);
   let productsPerPage = 5;
-  const { newProduct } = useNewProductContext();
+  const { currentProduct } = useCurrentProductContext();
   const [currentProducts, setCurrentProducts] = useState(products);
+  const [productIdToEdit, setEditProductId] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (newProduct) {
-      setCurrentProducts((prev) => [...prev, newProduct]);
-    }
-  }, [newProduct]);
+ 
+
+  const getProductToEdit = (id: string | null): ProductData | null => {
+    if (!id) return null;
+    return products.find(product => product.id === id) || null;
+  };
+  
+ 
+
+useEffect(() => {
+  if (!currentProduct.product) return;
+
+  setCurrentProducts((prev) => 
+    currentProduct.isNew
+      ? [...prev, currentProduct.product]
+      : prev.map((product) => product.id === currentProduct.product.id ? currentProduct.product : product)
+  );
+}, [currentProduct]);
 
   function prevPage() {
     router.back();
@@ -54,7 +72,6 @@ export function ProductsTable({
   function nextPage() {
     router.push(`/?offset=${offset}`, { scroll: false });
   }
-
   return (
     <Card>
       <CardHeader>
@@ -84,7 +101,7 @@ export function ProductsTable({
           </TableHeader>
           <TableBody>
             {currentProducts && [...currentProducts].reverse().map((product) => (
-              <Product key={`${product._id}`} product={product} />
+              <Product setEditProductId={setEditProductId} key={`${product.id}`} product={product} />
             ))}
           </TableBody>
         </Table>
@@ -121,6 +138,9 @@ export function ProductsTable({
             </Button>
           </div>
         </form>
+        <EditProductModal data={getProductToEdit(productIdToEdit)} categories={categories || []} />
+       <AddProductModal  categories={categories || []} />
+        {/* <ProductModals categories={categoriesData} productToEdit={products[0]} /> */}
       </CardFooter>
     </Card>
   );

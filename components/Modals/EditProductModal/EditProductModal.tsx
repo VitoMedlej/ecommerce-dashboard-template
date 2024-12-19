@@ -1,38 +1,38 @@
-'use client';
+"use client";
 
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Form from "@radix-ui/react-form";
-import { useState } from "react";
-import { useProductEditModalContext } from "app/context/ContextProvider";
-// import { IProduct } from "@/lib/db";
-import { initialProductData, inputs, ProductData } from "../AddProductModal/AddProductModal";
+import { useCurrentProductContext, useProductEditModalContext } from "app/context/ContextProvider";
+import { useProductForm } from "app/Hooks/useProductForm";
+import CategorySelector from "@/components/CategorySelector/CategorySelector";
+import ImageUploader from "@/components/Cloudinary/ImageUploader";
 import { editProduct } from "utils/productApi";
+import { inputs, ProductData } from "../AddProductModal/AddProductModal";
 import { Categories } from "utils/SanityFunctions";
 
-const ProductEditModal = ({ data , categories }: { data: ProductData, categories : Categories }) => {
-  console.log('data: ', data);
+const ProductEditModal = ({ data, categories }: { data: ProductData | null; categories : Categories  }) => {
+  if (!data) return <></>;
+
+
   const { isProductEditModalOpen, setIsProductEditModalOpen } = useProductEditModalContext();
-  const [productData, setProductData] = useState<ProductData>(data);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setProductData((prev) => ({ ...prev, [name]: value }));
-  };
-
+  const { productData, handleChange, uploadedImages, setUploadedImages } = useProductForm(data, true);
+   const { setCurrentProduct } = useCurrentProductContext();
+ 
+ 
   const handleSave = async () => {
     try {
-      const result = await editProduct(`${data._id}`, productData);
-
+      const FinalProduct = { ...productData, images: uploadedImages };
+      const result = await editProduct(`${data.id}`, FinalProduct);
       if (!result.success) {
         throw new Error(result.error || "Failed to update product.");
       }
-
+      setCurrentProduct({product: FinalProduct, isNew: false});
       setIsProductEditModalOpen(false);
     } catch (error) {
       alert(`${error}`);
     }
   };
-  if (!data) return <></>
+
   return (
     <Dialog.Root open={isProductEditModalOpen} onOpenChange={setIsProductEditModalOpen}>
       <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-50 z-50" />
@@ -46,14 +46,14 @@ const ProductEditModal = ({ data , categories }: { data: ProductData, categories
             handleSave();
           }}
         >
-          {inputs && inputs.map((input) => (
+          {inputs.map((input) => (
             <Form.Field key={input.name} name={input.name}>
               <Form.Label className="block text-sm pb-1 font-medium">{input.label}</Form.Label>
               <Form.Control asChild>
                 {input.type === "textarea" ? (
                   <textarea
                     name={input.name}
-                    value={productData[input.name as keyof ProductData]}
+                    value={productData[input.name as keyof ProductData] as string}
                     onChange={handleChange}
                     rows={4}
                     className="w-full p-2 border rounded"
@@ -62,7 +62,7 @@ const ProductEditModal = ({ data , categories }: { data: ProductData, categories
                   <input
                     type={input.type}
                     name={input.name}
-                    value={productData[input.name as keyof ProductData]}
+                    value={productData[input.name as keyof ProductData] as string}
                     onChange={handleChange}
                     className="w-full p-2 border rounded"
                   />
@@ -70,6 +70,9 @@ const ProductEditModal = ({ data , categories }: { data: ProductData, categories
               </Form.Control>
             </Form.Field>
           ))}
+                 <CategorySelector handleChange={handleChange} productData={productData}  categories={categories} />
+
+          <ImageUploader uploadedImages={uploadedImages} setUploadedImages={setUploadedImages} />
           <div className="flex justify-end space-x-4 mt-4">
             <button
               type="button"

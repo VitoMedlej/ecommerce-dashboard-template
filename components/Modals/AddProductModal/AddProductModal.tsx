@@ -1,12 +1,14 @@
 "use client";
 
+import CategorySelector from "@/components/CategorySelector/CategorySelector";
 import ImageUploader from "@/components/Cloudinary/ImageUploader";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Form from "@radix-ui/react-form";
-import { useAddProductModalContext, useNewProductContext } from "app/context/ContextProvider";
+import { useAddProductModalContext, useCurrentProductContext } from "app/context/ContextProvider";
 import { useProductForm } from "app/Hooks/useProductForm";
 import { useState } from "react";
 import { addProduct } from "utils/productApi";
+import { Categories } from "utils/SanityFunctions";
 
 export const inputs = [
   { name: "title", type: "text", label: "Product title" },
@@ -20,28 +22,27 @@ export type ProductData = {
   [key in typeof inputs[number]["name"] | "category" | "subcategory" | 'images' | '_id' ]: string | number | string[];
 };
 
-export type Category = {
-  title: string;
-  subcategories: string[];
-};
+
 
 export const initialProductData: ProductData = inputs.reduce((acc, input) => {
   acc[input.name] = input.type === "number" ? "" : "";
   return acc;
 }, { category: "", subcategory: "", images:[] } as ProductData);
 
-const AddProductModal = ({ categories }: { categories: Category[] }) => {
-  const { productData, handleChange, uploadedImages, setUploadedImages, setProductData } = useProductForm(initialProductData);
+const AddProductModal = ({ categories }: { categories: Categories }) => {
+  const { productData, handleChange, uploadedImages, setUploadedImages } = useProductForm(initialProductData);
   const { ProductModalOpen, SetProductModalOpen } = useAddProductModalContext();
-  const { setNewProduct } = useNewProductContext();
+  
+  // current product handles newly added or edited products. Adds them to the products table directly. 
+  const { setCurrentProduct } = useCurrentProductContext();
+
 
   const handleSave = async () => {
     try {
       const FinalProduct = {...productData, images:uploadedImages}
       const result = await addProduct(FinalProduct);
-      console.log('result: ', result);
       if (result.success) {
-        setNewProduct(result.responseObject);
+        setCurrentProduct({product: result.responseObject, isNew: true});
         SetProductModalOpen(false);
       } else {
         throw result?.error;
@@ -89,46 +90,7 @@ const AddProductModal = ({ categories }: { categories: Category[] }) => {
             </Form.Field>
           ))}
 
-          <Form.Field name="category">
-            <Form.Label className="block text-sm pb-1 font-medium">Category</Form.Label>
-            <select
-              name="category"
-              value={productData.category}
-              onChange={(e) => {
-                handleChange(e);
-                setProductData((prev) => ({ ...prev, subcategory: "" }));
-              }}
-              className="w-full p-2 border rounded"
-            >
-              <option value="">Select a category</option>
-              {categories.map((category) => (
-                <option key={category.title} value={category.title}>
-                  {category.title}
-                </option>
-              ))}
-            </select>
-          </Form.Field>
-
-          {productData.category && (
-            <Form.Field name="subcategory">
-              <Form.Label className="block text-sm pb-1 font-medium">Subcategory</Form.Label>
-              <select
-                name="subcategory"
-                value={productData.subcategory}
-                onChange={handleChange}
-                className="w-full p-2 border rounded"
-              >
-                <option value="">Select a subcategory</option>
-                {categories
-                  .find((cat) => cat.title === productData.category)
-                  ?.subcategories.map((subcategory) => (
-                    <option key={subcategory} value={subcategory}>
-                      {subcategory}
-                    </option>
-                  ))}
-              </select>
-            </Form.Field>
-          )}
+         <CategorySelector handleChange={handleChange} productData={productData}  categories={categories} />
 
         <ImageUploader uploadedImages={uploadedImages} setUploadedImages={setUploadedImages}  />
 
@@ -151,7 +113,5 @@ const AddProductModal = ({ categories }: { categories: Category[] }) => {
 };
 
 export default AddProductModal;
-function useProduct(initialProductData: ProductData): { productData: any; handleChange: any; uploadedImages: any; setUploadedImages: any; } {
-  throw new Error("Function not implemented.");
-}
+
 

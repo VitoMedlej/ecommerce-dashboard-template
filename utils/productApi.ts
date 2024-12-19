@@ -9,7 +9,6 @@ interface ProductResponse {
 }
 
 const addProduct = async(product : ProductData) : Promise < ProductResponse > => {
-    console.log('product: ', product);
     try {
         const response = await fetch(`${process.env.EXTERNAL_API_URL}/products/add`, {
             method: "POST",
@@ -34,15 +33,14 @@ const addProduct = async(product : ProductData) : Promise < ProductResponse > =>
 };
 
 const editProduct = async(productId : string, product : ProductData) : Promise < ProductResponse > => {
-    console.log('productId:', productId, 'product:', product);
     try {
-        const response = await fetch(`${process.env.EXTERNAL_API_URL}/products/${productId}/edit`, {
+        const response = await fetch(`${process.env.EXTERNAL_API_URL}/products/update/${productId}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${process.env.TKN}`
             },
-            body: JSON.stringify({product})
+            body: JSON.stringify(product)
         });
 
         if (!response.ok) {

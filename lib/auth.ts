@@ -25,7 +25,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           if (!response.ok) throw new CredentialsSignin('Invalid credentials');
 
           const user = await response.json();
-          console.log('user: ', user);
 
           if (user?.responseObject) {
             return { id: user.responseObject.id, name: user.responseObject.name };

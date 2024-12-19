@@ -1,13 +1,20 @@
 "use client";
 import { ProductData } from "@/components/Modals/AddProductModal/AddProductModal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-export const useProductForm = (initialProductData: ProductData) => {
+export const useProductForm = (initialProductData: ProductData, isEditMode ?: boolean) => {
   const [productData, setProductData] = useState<ProductData>(initialProductData);
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
 
+  useEffect(() => {
+    if (isEditMode && Array.isArray(productData.images) && productData.images.length > 0) {
+      setUploadedImages(productData.images || []);
+    }
+  }, [isEditMode, productData.images]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
+
     setProductData(prev => ({
       ...prev,
       [name]: type === "number" && value === "" ? "" : value,

@@ -18,7 +18,6 @@ const apiRequest = async(url : string, method : "GET" | "POST" | "PUT" | "DELETE
         }
         
         const result = await response.json();
-        console.log('result: ', result);
         return result
         
     } catch (error) {

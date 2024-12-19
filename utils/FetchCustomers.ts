@@ -15,8 +15,8 @@ export const fetchCustomers = async (
   limit: number = 10
 ): Promise<FetchCustomersResponse> => {
   const token = process.env.TKN;
-  const url = `${process.env.EXTERNAL_API_URL}/customers?page=${page}&limit=${limit}`;
-
+  const url = `${process.env.EXTERNAL_API_URL}/users?page=${page}&limit=${limit}`;
+  
   if (!token) {
     return { error: "Bearer token is missing", customers: [], total: 0 };
   }

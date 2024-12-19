@@ -15,7 +15,6 @@ export async function POST(req: Request) {
       folder: "dashboard-uploads",
     });
 
-    console.log("uploadResponse: ", uploadResponse);
 
     return NextResponse.json({ url: uploadResponse.secure_url }, { status: 200 });
   } catch (error) {

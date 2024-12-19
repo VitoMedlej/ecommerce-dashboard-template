@@ -9,10 +9,13 @@ import {deleteProduct} from './actions';
 import {IProduct} from '@/lib/db';
 import {useProductEditModalContext} from 'app/context/ContextProvider';
 import {ProductData} from '@/components/Modals/AddProductModal/AddProductModal';
+import { Dispatch, SetStateAction } from 'react';
 
-export function Product({product} : {
-    product: ProductData
+export function Product({product,setEditProductId} : {
+    product: ProductData,
+    setEditProductId : Dispatch<SetStateAction<string | null>>
 }) {
+   
   const validImage = Array.isArray(product?.images)
   ? product.images.find((url) => typeof url === "string" && /^https:\/\/res\.cloudinary\.com\/.*$/.test(url))
   : null;
@@ -54,7 +57,10 @@ src={validImage || 'https://authjs.dev/img/etc/logo-sm.webp'}
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem
                             className='cursor-pointer'
-                            onClick={() => setIsProductEditModalOpen(true)}>Edit</DropdownMenuItem>
+                            onClick={() => {
+                            setEditProductId(`${product.id}`);
+                            setIsProductEditModalOpen(true)
+                            }}>Edit</DropdownMenuItem>
                         <DropdownMenuItem>
                             <form action={deleteProduct}>
                                 <button type="submit">Delete</button>

@@ -26,7 +26,6 @@ export const revalidate = 200;
 export default async function CustomersPage() {
 
   const usersResponse = await fetchCustomers()
-  console.log('usersResponse: ', usersResponse);
 
   const customerKeys = Array.from(
     new Set(customers.flatMap(customer => Object.keys(customer)))

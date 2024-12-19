@@ -24,24 +24,25 @@ export async function getProducts(
   const defaultResponse = { products: [], newOffset: null, totalProducts: 0 };
 
   try {
-    const response = await fetch(`${process.env.EXTERNAL_API_URL}/products?search=${search}&offset=${offset}`, {
+    const response = await fetch(`${process.env.EXTERNAL_API_URL}/products/dashboard/fetch-products?search=${search}&offset=${offset}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${process.env.TKN}`,
       },
+      next: {revalidate: 100}
     });
 
-    if (!response.ok || !response.headers.get('content-type')?.includes('application/json')) {
+    if (response.status !== 200) {
       console.warn('Invalid or non-JSON response received.');
       return defaultResponse;
     }
 
     const data = await response.json();
     return {
-      products: data?.responseObject || [],
+      products: data?.responseObject.data || [],
       newOffset: data?.newOffset || 12,
-      totalProducts: data?.responseObject?.length || 0,
+      totalProducts: data?.responseObject?.total,
     };
   } catch (error : any)  {
     console.warn('Error fetching products:', error.message || error);

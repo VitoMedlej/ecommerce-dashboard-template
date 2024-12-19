@@ -4,7 +4,7 @@ import { getProducts } from '@/lib/db';
 import DashboardOptions from '@/components/DashboardOptions/DashboardOptions';
 import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
-import { fetchSanityCategories } from 'utils/SanityFunctions';
+import { Categories, fetchSanityCategories } from 'utils/SanityFunctions';
 import ProductModals from '@/components/Modals/ProductModals';
 
 
@@ -35,15 +35,14 @@ export default async function ProductsPage(
   }
 
   try {
-    const { data: categories } = await fetchSanityCategories();
-    categoriesData = categories || [];
+    const { data : categories  }  = await fetchSanityCategories();
+    categoriesData  = categories || [];
   } catch (error : any) {
     console.error('Error loading categories:', error.message || error);
     categoriesData = [];
   }
 
   const { products, newOffset, totalProducts } = productsData;
-
   return (
     <>
       <Tabs defaultValue="all">
@@ -51,6 +50,7 @@ export default async function ProductsPage(
         <TabsContent value="all">
           {products.length > 0 ? (
             <ProductsTable
+            categories={categoriesData as Categories}
               products={products}
               offset={newOffset ?? 0}
               totalProducts={totalProducts}
@@ -61,7 +61,7 @@ export default async function ProductsPage(
         </TabsContent>
       </Tabs>
       
-      <ProductModals categories={categoriesData} productToEdit={products[0]} />
+    
     </>
   );
 }

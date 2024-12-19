@@ -43,7 +43,7 @@ export default function LoginPage() {
               placeholder="Password"
               className="w-full p-2 mb-2 border"
               required
-            />
+          />
             <Button className="w-full">Sign in</Button>
           </form>
         </CardFooter>

@@ -1,5 +1,6 @@
 "use client";
 
+import { ProductData } from "@/components/Modals/AddProductModal/AddProductModal";
 import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from "react";
 
 // Define the context for ProductEditModal
@@ -21,12 +22,13 @@ export const AddProductModalContext = createContext<{
 });
 
 // New context for newly added product
-export const NewProductContext = createContext<{
-  newProduct: any | null;
-  setNewProduct: Dispatch<SetStateAction<any | null>>;
+
+export const CurrentProductContext = createContext<{
+  currentProduct: { product: any | null; isNew: boolean };
+  setCurrentProduct: Dispatch<SetStateAction<{ product: any | null; isNew: boolean }>>;
 }>({
-  newProduct: null,
-  setNewProduct: () => {},
+  currentProduct: { product: null, isNew: false },
+  setCurrentProduct: () => {},
 });
 
 
@@ -37,15 +39,21 @@ const ContextWrapper = ({
 }) => {
   const [isProductEditModalOpen, setIsProductEditModalOpen] = useState<boolean>(false);
   const [ProductModalOpen, SetProductModalOpen] = useState<boolean>(false);
-  const [newProduct, setNewProduct] = useState<any | null>(null);
+  const [currentProduct, setCurrentProduct] = useState<{
+    product: ProductData | null;
+    isNew: boolean;
+  }>({
+    product: null,
+    isNew: false,
+  });
 
   return (
     <ProductEditModalContext.Provider value={{ isProductEditModalOpen, setIsProductEditModalOpen }}>
       <AddProductModalContext.Provider value={{ ProductModalOpen, SetProductModalOpen }}>
-      <NewProductContext.Provider value={{ newProduct, setNewProduct }}>
+      <CurrentProductContext.Provider value={{ currentProduct, setCurrentProduct }}>
 
         {children}
-      </NewProductContext.Provider>
+      </CurrentProductContext.Provider>
       </AddProductModalContext.Provider>
     </ProductEditModalContext.Provider>
   );
@@ -55,4 +63,4 @@ export default ContextWrapper;
 
 export const useProductEditModalContext = () => useContext(ProductEditModalContext);
 export const useAddProductModalContext = () => useContext(AddProductModalContext);
-export const useNewProductContext = () => useContext(NewProductContext);
+export const useCurrentProductContext = () => useContext(CurrentProductContext);
