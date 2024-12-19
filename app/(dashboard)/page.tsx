@@ -5,7 +5,6 @@ import DashboardOptions from '@/components/DashboardOptions/DashboardOptions';
 import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { Categories, fetchSanityCategories } from 'utils/SanityFunctions';
-import ProductModals from '@/components/Modals/ProductModals';
 
 
 

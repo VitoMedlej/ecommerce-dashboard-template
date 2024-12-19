@@ -1,14 +1,14 @@
 import React from 'react';
 import * as Form from "@radix-ui/react-form";
-import { Category, initialProductData, ProductData } from '../Modals/AddProductModal/AddProductModal';
-import { useProductForm } from 'app/Hooks/useProductForm';
+import {   ProductData } from '../Modals/AddProductModal/AddProductModal';
+import { Categories } from 'utils/SanityFunctions';
 
 
 
 
 
 interface CategorySelectorProps {
-  categories: Category[];
+  categories:Categories;
   productData: ProductData;
   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
 }
