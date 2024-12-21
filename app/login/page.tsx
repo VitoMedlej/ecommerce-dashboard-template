@@ -20,13 +20,23 @@ export default function LoginPage() {
           <form
             action={async (formData) => {
               'use server';
+            try {
+
+            
               const username = formData.get('username')?.toString();
               const password = formData.get('password')?.toString();
               await signIn('credentials', {
                 username,
                 password,
-                redirectTo: '/',
+                redirect:false
+                // redirectTo: '/',
               });
+            }
+            catch(e) {
+              console.error('error from login page: ', e);
+              return null;
+
+            }
             }}
             className="w-full"
           >

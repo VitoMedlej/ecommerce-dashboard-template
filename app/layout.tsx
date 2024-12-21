@@ -1,7 +1,6 @@
 import ContextWrapper from './context/ContextProvider';
 import './globals.css';
 
-import { Analytics } from '@vercel/analytics/react';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -28,7 +27,6 @@ export default  async function RootLayout({
       <ContextWrapper>
         {children}
       </ContextWrapper>
-      <Analytics />
         </body>
 
     </html>

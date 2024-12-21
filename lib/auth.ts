@@ -31,7 +31,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           }
           throw new CredentialsSignin('Invalid credentials');
         } catch (error) {
-          throw new CredentialsSignin('Authentication failed');
+          console.error('error: ', error);
+          return null;
+          // throw new CredentialsSignin('Authentication failed');
         }
       },
     }),
