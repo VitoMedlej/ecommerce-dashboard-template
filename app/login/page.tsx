@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { signIn } from '@/lib/auth';
+import { isRedirectError } from 'next/dist/client/components/redirect';
 
 export default function LoginPage() {
   return (
@@ -22,18 +23,20 @@ export default function LoginPage() {
               'use server';
             try {
 
-            
               const username = formData.get('username')?.toString();
               const password = formData.get('password')?.toString();
               await signIn('credentials', {
                 username,
                 password,
                 // redirect:false
-                redirectTo: '/',
+                redirectTo: process.env.NEXTAUTH_URL || '/',
               });
             }
             catch(e) {
               console.error('error from login page: ', e);
+              if (isRedirectError(e)) {
+                throw e;
+            }
               return null;
 
             }
