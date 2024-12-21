@@ -28,8 +28,8 @@ export default function LoginPage() {
               await signIn('credentials', {
                 username,
                 password,
-                redirect:false
-                // redirectTo: '/',
+                // redirect:false
+                redirectTo: '/',
               });
             }
             catch(e) {
