@@ -61,9 +61,9 @@ const ImageUploader = ({
         onChange={handleImageUpload}
         className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600"
       />
-      <div className="flex grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="flex row wrap">
         {uploadedImages.map((url, index) => (
-          <div key={index} className="relative">
+          <div key={index} className="relative fit-content">
             <CldImage
               src={url}
               width="100"
@@ -73,9 +73,9 @@ const ImageUploader = ({
             />
             <button
               onClick={() => handleDelete(url)}
-              className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full"
+              className="absolute top-0 right-0 bg-red-500 text-white px-1 py-1 rounded-full"
             >
-              X
+              x
             </button>
           </div>
         ))}

@@ -27,6 +27,7 @@ import AddProductModal, { ProductData } from '@/components/Modals/AddProductModa
 
 import { Categories } from 'utils/SanityFunctions';
 import EditProductModal from '@/components/Modals/EditProductModal/EditProductModal';
+import { deleteProduct } from './actions';
 
 export function ProductsTable({
   products,
@@ -46,6 +47,14 @@ export function ProductsTable({
   const [currentProducts, setCurrentProducts] = useState(products);
   const [productIdToEdit, setEditProductId] = useState<string | null>(null);
 
+  const handleDelete = async (id: string) => {
+    if (id) {
+        const success = await deleteProduct(id);
+        if (success) {
+            setCurrentProducts((prevProducts) => prevProducts.filter(product => product.id !== id));
+        }
+    }
+};
  
 
   const getProductToEdit = (id: string | null): ProductData | null => {
@@ -88,7 +97,9 @@ useEffect(() => {
                 <span className="sr-only">Image</span>
               </TableHead>
               <TableHead>Name</TableHead>
-              <TableHead>In Stock</TableHead>
+              <TableHead>
+                
+                 | Qty</TableHead>
               <TableHead className="hidden md:table-cell">Price</TableHead>
               <TableHead className="hidden md:table-cell">
                 Total Sales
@@ -101,7 +112,9 @@ useEffect(() => {
           </TableHeader>
           <TableBody>
             {currentProducts && [...currentProducts].reverse().map((product) => (
-              <Product setEditProductId={setEditProductId} key={`${product.id}`} product={product} />
+              <Product
+              handleDelete={handleDelete}
+              setEditProductId={setEditProductId} key={`${product.id}`} product={product} />
             ))}
           </TableBody>
         </Table>

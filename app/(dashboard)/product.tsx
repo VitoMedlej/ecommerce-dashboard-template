@@ -5,15 +5,16 @@ import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, 
 import {MoreHorizontal} from 'lucide-react';
 import {TableCell, TableRow} from '@/components/ui/table';
 
-import {deleteProduct} from './actions';
+
 import {IProduct} from '@/lib/db';
 import {useProductEditModalContext} from 'app/context/ContextProvider';
 import {ProductData} from '@/components/Modals/AddProductModal/AddProductModal';
 import { Dispatch, SetStateAction } from 'react';
 
-export function Product({product,setEditProductId} : {
+export function Product({product,setEditProductId, handleDelete} : {
     product: ProductData,
-    setEditProductId : Dispatch<SetStateAction<string | null>>
+    setEditProductId : Dispatch<SetStateAction<string | null>>,
+    handleDelete : (id: string) => void;
 }) {
    
   const validImage = Array.isArray(product?.images)
@@ -36,7 +37,7 @@ src={validImage || 'https://authjs.dev/img/etc/logo-sm.webp'}
             <TableCell className="font-medium">{product.title}</TableCell>
             <TableCell>
                 <Badge variant="outline" className="capitalize">
-                    true {/* {product.status} */}
+                    {Number(product?.stock) > 0 ? ` true | ${product?.stock}` : 'N/A' } {/* {product.status} */}
                 </Badge>
             </TableCell>
             <TableCell className="hidden md:table-cell">{`$${product.price}`}</TableCell>
@@ -61,11 +62,11 @@ src={validImage || 'https://authjs.dev/img/etc/logo-sm.webp'}
                             setEditProductId(`${product.id}`);
                             setIsProductEditModalOpen(true)
                             }}>Edit</DropdownMenuItem>
-                        <DropdownMenuItem>
-                            <form action={deleteProduct}>
-                                <button type="submit">Delete</button>
-                            </form>
-                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                            className='cursor-pointer'
+                            onClick={() => {
+                                handleDelete(`${product.id}`);
+                            }}>Delete</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </TableCell>

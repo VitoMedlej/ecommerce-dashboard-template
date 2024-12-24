@@ -19,30 +19,26 @@ export const inputs = [
 ];
 
 export type ProductData = {
-  [key in typeof inputs[number]["name"] | "category" | "subcategory" | 'images' | '_id' ]: string | number | string[];
+  [key in typeof inputs[number]["name"] | "category" | "subcategory" | "images" | "_id"]: string | number | string[];
 };
-
-
 
 export const initialProductData: ProductData = inputs.reduce((acc, input) => {
   acc[input.name] = input.type === "number" ? "" : "";
   return acc;
-}, { category: "", subcategory: "", images:[] } as ProductData);
+}, { category: "", subcategory: "", images: [] } as ProductData);
 
 const AddProductModal = ({ categories }: { categories: Categories }) => {
-  const { productData, handleChange, uploadedImages, setUploadedImages } = useProductForm(initialProductData);
+  const { productData, handleChange, uploadedImages, setUploadedImages, resetForm } = useProductForm(initialProductData);
   const { ProductModalOpen, SetProductModalOpen } = useAddProductModalContext();
-  
-  // current product handles newly added or edited products. Adds them to the products table directly. 
   const { setCurrentProduct } = useCurrentProductContext();
-
 
   const handleSave = async () => {
     try {
-      const FinalProduct = {...productData, images:uploadedImages}
+      const FinalProduct = { ...productData, images: uploadedImages };
       const result = await addProduct(FinalProduct);
       if (result.success) {
-        setCurrentProduct({product: result.responseObject, isNew: true});
+        setCurrentProduct({ product: result.responseObject, isNew: true });
+        resetForm(); // Reset all inputs after a successful response
         SetProductModalOpen(false);
       } else {
         throw result?.error;
@@ -90,9 +86,9 @@ const AddProductModal = ({ categories }: { categories: Categories }) => {
             </Form.Field>
           ))}
 
-         <CategorySelector handleChange={handleChange} productData={productData}  categories={categories} />
+          <CategorySelector handleChange={handleChange} productData={productData} categories={categories} />
 
-        <ImageUploader uploadedImages={uploadedImages} setUploadedImages={setUploadedImages}  />
+          <ImageUploader uploadedImages={uploadedImages} setUploadedImages={setUploadedImages} />
 
           <div className="flex justify-end space-x-4 mt-4">
             <button
@@ -113,5 +109,3 @@ const AddProductModal = ({ categories }: { categories: Categories }) => {
 };
 
 export default AddProductModal;
-
-

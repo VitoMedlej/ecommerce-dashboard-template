@@ -20,6 +20,9 @@ export const useProductForm = (initialProductData: ProductData, isEditMode ?: bo
       [name]: type === "number" && value === "" ? "" : value,
     }));
   };
-
-  return { productData, setProductData, uploadedImages, setUploadedImages, handleChange };
+  const resetForm = () => {
+    setProductData(initialProductData); // Reset product data to initial values
+    setUploadedImages([]); // Clear uploaded images
+  };
+  return { productData, setProductData, uploadedImages, setUploadedImages, handleChange, resetForm };
 };

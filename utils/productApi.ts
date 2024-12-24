@@ -25,7 +25,7 @@ const addProduct = async(product : ProductData) : Promise < ProductResponse > =>
         }
 
         const result = await response.json();
-        return {success: true, responseObject: result.responseObject};
+        return {success: true, responseObject: JSON.parse(result.responseObject)};
     } catch (error) {
         console.error(error);
         return {error, success: false};
