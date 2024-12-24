@@ -52,11 +52,12 @@ export async function getProducts(
 
 export async function deleteProductById(id: string): Promise<boolean> {
   try {
+     
     const response = await fetch(`${process.env.NEXT_PUBLIC_EXTERNAL_API_URL || process.env.EXTERNAL_API_URL}/products/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.TKN}`,
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_TKN}`,
       },
     });
 

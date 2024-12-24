@@ -18,9 +18,6 @@ export default  async function RootLayout({
   params : any
 }) {
 
-
-
- 
   return (
     <html lang="en">
       <body className="flex min-h-screen w-full flex-col">
