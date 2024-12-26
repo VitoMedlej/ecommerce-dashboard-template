@@ -10,7 +10,7 @@ interface ProductResponse {
 
 const addProduct = async(product : ProductData) : Promise < ProductResponse > => {
     try {
-        const response = await fetch(`${process.env.EXTERNAL_API_URL}/products/add`, {
+        const response = await fetch(`${process.env.EXTERNAL_API_URL}/products/dashboard/add`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -34,7 +34,7 @@ const addProduct = async(product : ProductData) : Promise < ProductResponse > =>
 
 const editProduct = async(productId : string, product : ProductData) : Promise < ProductResponse > => {
     try {
-        const response = await fetch(`${process.env.EXTERNAL_API_URL}/products/update/${productId}`, {
+        const response = await fetch(`${process.env.EXTERNAL_API_URL}/products/dashboard/update/${productId}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",

@@ -45,6 +45,7 @@ export function ProductsTable({
   let productsPerPage = 5;
   const { currentProduct } = useCurrentProductContext();
   const [currentProducts, setCurrentProducts] = useState(products);
+ 
   const [productIdToEdit, setEditProductId] = useState<string | null>(null);
 
   const handleDelete = async (id: string) => {
@@ -89,7 +90,7 @@ useEffect(() => {
           Manage your products and view their sales performance.
         </CardDescription>
       </CardHeader>
-      <CardContent>
+    {currentProducts && currentProducts?.length > 0 ?  <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
@@ -119,7 +120,12 @@ useEffect(() => {
           </TableBody>
         </Table>
       </CardContent>
-      <CardFooter>
+    :
+    <div className='p-6  font-semibold'>
+      No Products Found...
+    </div>  
+    }
+    { <CardFooter>
         <form className="flex items-center w-full justify-between">
           <div className="text-xs text-muted-foreground">
             Showing{' '}
@@ -154,7 +160,7 @@ useEffect(() => {
         <EditProductModal data={getProductToEdit(productIdToEdit)} categories={categories || []} />
        <AddProductModal  categories={categories || []} />
         {/* <ProductModals categories={categoriesData} productToEdit={products[0]} /> */}
-      </CardFooter>
+      </CardFooter>}
     </Card>
   );
 }

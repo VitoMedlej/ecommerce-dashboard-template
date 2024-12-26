@@ -15,7 +15,7 @@ const ProductEditModal = ({ data, categories }: { data: ProductData | null; cate
 
 
   const { isProductEditModalOpen, setIsProductEditModalOpen } = useProductEditModalContext();
-  const { productData, handleChange, uploadedImages, setUploadedImages } = useProductForm(data, true);
+  const { productData, handleChange, uploadedImages, setUploadedImages, resetForm } = useProductForm(data, true);
    const { setCurrentProduct } = useCurrentProductContext();
  
  
@@ -27,6 +27,7 @@ const ProductEditModal = ({ data, categories }: { data: ProductData | null; cate
         throw new Error(result.error || "Failed to update product.");
       }
       setCurrentProduct({product: FinalProduct, isNew: false});
+      resetForm()
       setIsProductEditModalOpen(false);
     } catch (error) {
       alert(`${error}`);

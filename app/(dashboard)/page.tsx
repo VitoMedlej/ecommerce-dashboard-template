@@ -47,16 +47,14 @@ export default async function ProductsPage(
       <Tabs defaultValue="all">
         <DashboardOptions />
         <TabsContent value="all">
-          {products.length > 0 ? (
+           
             <ProductsTable
             categories={categoriesData as Categories}
-              products={products}
+              products={products ?? []}
               offset={newOffset ?? 0}
-              totalProducts={totalProducts}
+              totalProducts={totalProducts ?? 0}
             />
-          ) : (
-            <div>No products available</div>
-          )}
+          
         </TabsContent>
       </Tabs>
       
