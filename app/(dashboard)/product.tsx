@@ -17,6 +17,7 @@ export function Product({product,setEditProductId, handleDelete} : {
     handleDelete : (id: string) => void;
 }) {
    
+   
   const validImage = Array.isArray(product?.images)
   ? product.images.find((url) => typeof url === "string" && /^https:\/\/res\.cloudinary\.com\/.*$/.test(url))
   : null;
@@ -59,6 +60,7 @@ src={validImage || 'https://authjs.dev/img/etc/logo-sm.webp'}
                         <DropdownMenuItem
                             className='cursor-pointer'
                             onClick={() => {
+                           
                             setEditProductId(`${product.id}`);
                             setIsProductEditModalOpen(true)
                             }}>Edit</DropdownMenuItem>

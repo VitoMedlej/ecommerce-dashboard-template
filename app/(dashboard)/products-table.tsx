@@ -45,6 +45,7 @@ export function ProductsTable({
   let productsPerPage = 5;
   const { currentProduct } = useCurrentProductContext();
   const [currentProducts, setCurrentProducts] = useState(products);
+
  
   const [productIdToEdit, setEditProductId] = useState<string | null>(null);
 
@@ -60,7 +61,7 @@ export function ProductsTable({
 
   const getProductToEdit = (id: string | null): ProductData | null => {
     if (!id) return null;
-    return products.find(product => product.id === id) || null;
+    return currentProducts.find(product => product.id === id) || null;
   };
   
  

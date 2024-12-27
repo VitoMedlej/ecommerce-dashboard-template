@@ -5,7 +5,7 @@ import {ProductData} from "@/components/Modals/AddProductModal/AddProductModal";
 interface ProductResponse {
     error?: any;
     success : boolean;
-    responseObject?: string;
+    responseObject?: ProductData;
 }
 
 const addProduct = async(product : ProductData) : Promise < ProductResponse > => {

@@ -31,13 +31,17 @@ const AddProductModal = ({ categories }: { categories: Categories }) => {
   const { productData, handleChange, uploadedImages, setUploadedImages, resetForm } = useProductForm(initialProductData);
   const { ProductModalOpen, SetProductModalOpen } = useAddProductModalContext();
   const { setCurrentProduct } = useCurrentProductContext();
+  
 
   const handleSave = async () => {
     try {
       const FinalProduct = { ...productData, images: uploadedImages };
-      const result = await addProduct(FinalProduct);
+      const result   = await addProduct(FinalProduct);
       if (result.success) {
-        setCurrentProduct({ product: result.responseObject, isNew: true });
+        const { _id, ...rest } = result.responseObject as any;
+    
+          
+        setCurrentProduct({product: { ...rest, id: _id?.toString() }, isNew: true  });
         resetForm(); // Reset all inputs after a successful response
         SetProductModalOpen(false);
       } else {
