@@ -8,8 +8,6 @@ import { Categories, fetchSanityCategories } from 'utils/SanityFunctions';
 
 
 
-
-
 export default async function ProductsPage(
   props: {
     searchParams: Promise<{ q: string; offset: string }>;

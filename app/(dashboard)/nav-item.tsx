@@ -12,10 +12,12 @@ import { usePathname } from 'next/navigation';
 export function NavItem({
   href,
   label,
+  prefetch,
   children
 }: {
   href: string;
   label: string;
+  prefetch ?: boolean;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -24,6 +26,7 @@ export function NavItem({
     <Tooltip>
       <TooltipTrigger asChild>
         <Link
+        prefetch={false}
           href={href}
           className={clsx(
             'flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8',
