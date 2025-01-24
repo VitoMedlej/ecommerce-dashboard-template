@@ -24,7 +24,7 @@ export async function getProducts(
   const defaultResponse = { products: [], newOffset: null, totalProducts: 0 };
 
   try {
-    const response = await fetch(`${process.env.EXTERNAL_API_URL}/products/dashboard/fetch-products?search=${search}&offset=${offset}`, {
+    const response = await fetch(`${process.env.EXTERNAL_API_URL}/dashboard/fetch-products?search=${search}&offset=${offset}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -53,7 +53,7 @@ export async function getProducts(
 export async function deleteProductById(id: string): Promise<boolean> {
   try {
      
-    const response = await fetch(`${process.env.NEXT_PUBLIC_EXTERNAL_API_URL || process.env.EXTERNAL_API_URL}/products/dashboard/${id}`, {
+    const response = await fetch(`${process.env.EXTERNAL_API_URL || process.env.EXTERNAL_API_URL}/products/dashboard/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

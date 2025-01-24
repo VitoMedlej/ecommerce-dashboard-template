@@ -10,7 +10,8 @@ interface ProductResponse {
 
 const addProduct = async(product : ProductData) : Promise < ProductResponse > => {
     try {
-        const response = await fetch(`${process.env.EXTERNAL_API_URL}/products/dashboard/add`, {
+        console.log('NEXT_PUBLIC_EXTERNAL_API_URL: ', process.env.NEXT_PUBLIC_EXTERNAL_API_URL);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_EXTERNAL_API_URL}/dashboard/product/add`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -20,11 +21,15 @@ const addProduct = async(product : ProductData) : Promise < ProductResponse > =>
         });
 
         if (!response.ok) {
+        
             const errorResponse = await response.json();
-            throw new Error(errorResponse.message || "Failed to add product");
+            console.log('errorResponse: ', errorResponse);
+            throw errorResponse.message || "Failed to add product";
+            
         }
-
+                
         const result = await response.json();
+        console.log('result: ', result);
         return {success: true, responseObject: JSON.parse(result.responseObject)};
     } catch (error) {
         console.error(error);
@@ -34,7 +39,7 @@ const addProduct = async(product : ProductData) : Promise < ProductResponse > =>
 
 const editProduct = async(productId : string, product : ProductData) : Promise < ProductResponse > => {
     try {
-        const response = await fetch(`${process.env.EXTERNAL_API_URL}/products/dashboard/update/${productId}`, {
+        const response = await fetch(`${process.env.EXTERNAL_API_URL}/dashboard/product/update/${productId}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",

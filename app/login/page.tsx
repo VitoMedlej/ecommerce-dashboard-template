@@ -22,11 +22,10 @@ export default function LoginPage() {
             action={async (formData) => {
               'use server';
             try {
-
-              const username = formData.get('username')?.toString();
+              const email = formData.get('email')?.toString();
               const password = formData.get('password')?.toString();
               await signIn('credentials', {
-                username,
+                email,
                 password,
                 // redirect:false
                 redirectTo: process.env.NEXTAUTH_URL || '/',
@@ -44,9 +43,9 @@ export default function LoginPage() {
             className="w-full"
           >
             <input
-              type="text"
-              name="username"
-              placeholder="Username"
+              type="email"
+              name="email"
+              placeholder="Email"
               className="w-full p-2 mb-2 border"
               required
             />

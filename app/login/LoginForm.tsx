@@ -19,7 +19,8 @@ export default function LoginForm() {
         email,
         password,
       });
-
+      
+      console.log('res: ', res);
       if (res?.error) {
         // throw new Error(res.error);
         console.log('res.error: ', res.error);

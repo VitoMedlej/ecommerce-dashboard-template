@@ -6,28 +6,32 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        username: { label: 'Username', type: 'text' },
+        email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
+        console.log('credentials: ', credentials);
+        
         try {
           const response = await fetch(
-            `https://express-ts-backend.onrender.com/users/674f60df0b2b8ea9f631643b`,
+            `${process.env.EXTERNAL_API_URL}/dashboard/auth/login`,
             {
-              method: 'GET',
+              method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${process.env.TKN}`,
               },
+              body : JSON.stringify({user: {email: credentials.email, password: credentials.password}})
             }
           );
 
           if (!response.ok) throw new CredentialsSignin('Invalid credentials');
 
-          const user = await response.json();
+          const data = await response.json();
 
-          if (user?.responseObject) {
-            return { id: user.responseObject.id, name: user.responseObject.name };
+          console.log('data: ', data);
+          if ( data?.responseObject?.user && data?.responseObject?.token) {
+            return data?.responseObject;
           }
           throw new CredentialsSignin('Invalid credentials');
         } catch (error) {

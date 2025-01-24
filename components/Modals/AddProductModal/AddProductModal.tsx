@@ -6,7 +6,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import * as Form from "@radix-ui/react-form";
 import { useAddProductModalContext, useCurrentProductContext } from "app/context/ContextProvider";
 import { useProductForm } from "app/Hooks/useProductForm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { addProduct } from "utils/productApi";
 import { Categories } from "utils/SanityFunctions";
 
@@ -28,10 +28,15 @@ export const initialProductData: ProductData = inputs.reduce((acc, input) => {
 }, { category: "", subcategory: "", images: [] } as ProductData);
 
 const AddProductModal = ({ categories }: { categories: Categories }) => {
-  const { productData, handleChange, uploadedImages, setUploadedImages, resetForm } = useProductForm(initialProductData);
+  const { productData, handleChange, uploadedImages, setUploadedImages, resetForm, restoreStashedChanges,clearStashedChanges } = useProductForm(initialProductData);
   const { ProductModalOpen, SetProductModalOpen } = useAddProductModalContext();
   const { setCurrentProduct } = useCurrentProductContext();
-  
+
+  useEffect(() => {
+    if (ProductModalOpen) {
+      restoreStashedChanges();
+    }
+  }, [ProductModalOpen, restoreStashedChanges]);
 
   const handleSave = async () => {
     try {
@@ -39,7 +44,6 @@ const AddProductModal = ({ categories }: { categories: Categories }) => {
       const result   = await addProduct(FinalProduct);
       if (result.success) {
         const { _id, ...rest } = result.responseObject as any;
-    
           
         setCurrentProduct({product: { ...rest, id: _id?.toString() }, isNew: true  });
         resetForm(); // Reset all inputs after a successful response
@@ -48,6 +52,7 @@ const AddProductModal = ({ categories }: { categories: Categories }) => {
         throw result?.error;
       }
     } catch (error) {
+      console.log('error: ', error);
       alert(error);
     }
   };
@@ -97,7 +102,10 @@ const AddProductModal = ({ categories }: { categories: Categories }) => {
           <div className="flex justify-end space-x-4 mt-4">
             <button
               type="button"
-              onClick={() => SetProductModalOpen(false)}
+              onClick={() => {
+                clearStashedChanges();
+                SetProductModalOpen(false);
+              }}
               className="px-4 py-2 bg-gray-300 rounded"
             >
               Cancel
