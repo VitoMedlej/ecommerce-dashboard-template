@@ -1,5 +1,20 @@
-import { ProductData } from "@/components/Modals/AddProductModal/AddProductModal";
+import  ProductData  from "@/components/Modals/AddProductModal/AddProductModal";
 import { useState, useEffect } from "react";
+import { Variant } from "./useProductVariants";
+
+
+export const inputs = [
+  { name: "title", type: "text", label: "Product title" },
+  { name: "description", type: "textarea", label: "Product Description" },
+  { name: "price", type: "number", label: "Product Price" },
+  { name: "stock", type: "number", label: "Stock Quantity" },
+  { name: "tags", type: "text", label: 'Tags (Separate by ",")' },
+];
+
+export type ProductData = {
+  [key in typeof inputs[number]["name"] | "category" | "subcategory" | "images" | "variants" | "_id"]: string | number | string[] | Variant[];
+};
+
 
 export const useProductForm = (initialProductData: ProductData, isEditMode?: boolean) => {
   const [productData, setProductData] = useState<ProductData>(initialProductData);
@@ -7,7 +22,7 @@ export const useProductForm = (initialProductData: ProductData, isEditMode?: boo
 
   useEffect(() => {
     if (isEditMode && Array.isArray(productData.images) && productData.images.length > 0) {
-      setUploadedImages(productData.images || []);
+      setUploadedImages(productData.images as string[] || []);
     }
   }, [isEditMode, productData.images]);
 

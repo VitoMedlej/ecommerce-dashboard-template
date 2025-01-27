@@ -13,6 +13,7 @@ const Page = () => {
     { id: "hasColor", label: "Has Color", category: "specific" },
     { id: "hasSizes", label: "Has Sizes", category: "specific" },
     { id: "hasBrands", label: "Has Brands", category: "general" },
+    { id: "SimpleStock", label: "Simple Stock", category: "general" },
     // { id: "isSimple", label: "Has Brands", category: "general" },
   ];
 

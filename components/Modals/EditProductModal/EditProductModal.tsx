@@ -3,12 +3,13 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Form from "@radix-ui/react-form";
 import { useCurrentProductContext, useProductEditModalContext } from "app/context/ContextProvider";
-import { useProductForm } from "app/Hooks/useProductForm";
+import { inputs, ProductData, useProductForm } from "app/Hooks/useProductForm";
 import CategorySelector from "@/components/CategorySelector/CategorySelector";
 import ImageUploader from "@/components/Cloudinary/ImageUploader";
 import { editProduct } from "utils/productApi";
-import { inputs, ProductData } from "../AddProductModal/AddProductModal";
 import { Categories } from "utils/SanityFunctions";
+import Variants from "../Variants";
+import { useProductVariants } from "app/Hooks/useProductVariants";
 
 const ProductEditModal = ({ data, categories }: { data: ProductData | null; categories : Categories  }) => {
   if (!data) return <></>;
@@ -33,6 +34,8 @@ const ProductEditModal = ({ data, categories }: { data: ProductData | null; cate
       alert(`${error}`);
     }
   };
+  const  { variants, addVariant, updateVariant, deleteVariant, resetVariants }  = useProductVariants();
+  console.log('variants: ', variants);
 
   return (
     <Dialog.Root open={isProductEditModalOpen} onOpenChange={setIsProductEditModalOpen}>
@@ -72,6 +75,10 @@ const ProductEditModal = ({ data, categories }: { data: ProductData | null; cate
             </Form.Field>
           ))}
                  <CategorySelector handleChange={handleChange} productData={productData}  categories={categories} />
+
+
+
+                { <Variants deleteVariant={deleteVariant} updateVariant={updateVariant} resetVariants={resetVariants} variants={variants} addVariant={addVariant}  />}
 
           <ImageUploader uploadedImages={uploadedImages} setUploadedImages={setUploadedImages} />
           <div className="flex justify-end space-x-4 mt-4">
