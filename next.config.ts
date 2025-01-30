@@ -11,7 +11,7 @@ export default {
       }
     ],
     
-    domains: ['res.cloudinary.com','authjs.dev'],
+    domains: ['res.cloudinary.com','authjs.dev','wavescode8cdn.sirv.com'],
 
   },
   env: {

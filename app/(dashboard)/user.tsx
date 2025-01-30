@@ -23,13 +23,13 @@ export async function User() {
           size="icon"
           className="overflow-hidden rounded-full"
         >
-          <Image
-            src={user?.image ?? 'https://authjs.dev/img/etc/logo-sm.webp'}
+          {/* <Image
+            src={user?.image ?? 'https://wavescode8cdn.sirv.com/logo.png'}
             width={36}
             height={36}
             alt="Avatar"
             className="overflow-hidden rounded-full"
-          />
+          /> */}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

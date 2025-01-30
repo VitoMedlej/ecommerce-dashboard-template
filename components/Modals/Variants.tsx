@@ -19,53 +19,71 @@ const Variants = ({
   resetVariants,
 }: VariantsProps) => {
   return (
-    <div
-    style={{
-        padding: "1em",
-        border: "1px solid #8080802e",
-        borderRadius: "7px",
-      }}
-    >
-      <h2 className="text-sm font-medium mb-2">Variants</h2>
+    <div className="p-4 border border-gray-300 rounded-lg bg-white">
+      <h2 className="text-lg font-semibold mb-3">Variants</h2>
       {variants.map((variant, index) => (
-        <div key={index} className=" flex-wrap flex space-y-2 mb-2">
-          <input
-            type="text"
-            placeholder="Key (e.g., Color)"
-            value={variant.key}
-            onChange={(e) => updateVariant(index, "key", e.target.value)}
-            className="p-2 border rounded flex-1"
-          />
-          <input
-            type="text"
-            placeholder="Value (e.g., Red)"
-            value={variant.value}
-            onChange={(e) => updateVariant(index, "value", e.target.value)}
-            className="p-2 border rounded flex-1"
-          />
-          <button
-            type="button"
-            onClick={() => deleteVariant(index)}
-            className="px-2  py-1 bg-red-500 text-white rounded"
-          >
-            Delete
-          </button>
+        <div key={index} className="space-y-3 mb-4">
+          <div className="flex space-x-4">
+            <input
+              type="text"
+              placeholder="Variant Name (e.g., Color)"
+              value={variant.key}
+              onChange={(e) => updateVariant(index, "key", e.target.value)}
+              className="p-2 border rounded-md flex-1"
+            />
+            <button
+              type="button"
+              onClick={() => deleteVariant(index)}
+              className="px-3 py-2 bg-red-500 text-white rounded-md"
+            >
+              Delete
+            </button>
+          </div>
+          {variant.value.split(",").map((value, i) => (
+            <div key={i} className="flex items-center space-x-2">
+              <input
+                type="text"
+                placeholder={`Value ${i + 1}`}
+                value={value}
+                onChange={(e) => {
+                  const newValue = [...variant.value.split(",")];
+                  newValue[i] = e.target.value;
+                  updateVariant(index, "value", newValue.join(","));
+                }}
+                className="p-2 border rounded-md flex-1"
+              />
+              {i === variant.value.split(",").length - 1 && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const newValue = variant.value ? `${variant.value}, ` : "";
+                    updateVariant(index, "value", newValue);
+                  }}
+                  className="px-3 py-2 bg-blue-500 text-white rounded-md"
+                >
+                  Add Value
+                </button>
+              )}
+            </div>
+          ))}
         </div>
       ))}
       <button
         type="button"
         onClick={addVariant}
-        className="px-4 py-1 bg-blue-500 text-white rounded mt-2"
+        className="px-4 py-2 bg-green-500 text-white rounded-md"
       >
         Add Variant
       </button>
-   {variants.length > 0 &&   <button
-        type="button"
-        onClick={resetVariants}
-        className="px-4 py-1 text-red-500  rounded mt-2 ml-2"
-      >
-        Reset Variants
-      </button>}
+      {variants.length > 0 && (
+        <button
+          type="button"
+          onClick={resetVariants}
+          className="px-4 py-2 text-red-500 rounded-md mt-3"
+        >
+          Reset Variants
+        </button>
+      )}
     </div>
   );
 };

@@ -14,10 +14,14 @@ export function Product({ product, setEditProductId, handleDelete }: {
   handleDelete: (id: string) => void;
 }) {
   const validImage = 
-    Array.isArray(product?.images) && 
+    Array.isArray(product?.images) && product?.images?.length > 0 ?
     product.images.find(
-      (url) => typeof url === 'string' && /^https:\/\/res\.cloudinary\.com\/.*$/.test(url)
-    );
+      (url) => url != undefined && typeof url === 'string' 
+      && /^(https:\/\/res\.cloudinary\.com\/.*|https:\/\/wavescode8cdn\.sirv\.com\/.*)$/.test(url)
+    )
+    : 
+    'https://wavescode8cdn.sirv.com/logo.png'
+    ;
 
   const { setIsProductEditModalOpen } = useProductEditModalContext();
 
@@ -29,7 +33,7 @@ export function Product({ product, setEditProductId, handleDelete }: {
           className="aspect-square rounded-md object-cover"
           height={64}
           width={64}
-          src={`${validImage}` || 'https://authjs.dev/img/etc/logo-sm.webp'}
+          src={`${validImage}` || 'https://wavescode8cdn.sirv.com/logo.png'}
         />
       </TableCell>
       <TableCell className="font-medium">{product.title as string}</TableCell>

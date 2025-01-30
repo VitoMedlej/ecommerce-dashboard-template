@@ -10,6 +10,7 @@ export type Variant = {
 
 export const useProductVariants = () => {
   const [variants, setVariants] = useState<Variant[]>([]);
+  console.log('variants: ', variants);
 
   const addVariant = () => {
     setVariants((prev) => [...prev, { key: "", value: "" }]);
