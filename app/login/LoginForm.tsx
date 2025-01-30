@@ -20,7 +20,6 @@ export default function LoginForm() {
         password,
       });
       
-      console.log('res: ', res);
       if (res?.error) {
         // throw new Error(res.error);
         console.log('res.error: ', res.error);

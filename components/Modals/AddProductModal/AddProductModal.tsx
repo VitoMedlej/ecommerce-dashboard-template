@@ -66,11 +66,11 @@ const AddProductModal = ({ categories }: { categories: Categories }) => {
   return (
     <Dialog.Root open={ProductModalOpen} onOpenChange={SetProductModalOpen}>
       <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-50 z-50" />
-      <Dialog.Content className="overflow-y-auto max-w-[95vw] max-h-[90vh] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg w-full max-w-lg z-50">
+      <Dialog.Content className="overflow-y-auto max-w-[95vw] max-h-[90vh] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg w-full z-50">
         <Dialog.Title className="sr-only">Add a New Product</Dialog.Title>
         <h1 className="text-lg font-bold pb-4">Add a New Product</h1>
         <Form.Root
-          className="space-y-4"
+          className="space-y-4 max-w-lg auto"
           onSubmit={(e) => {
             e.preventDefault();
             handleSave();

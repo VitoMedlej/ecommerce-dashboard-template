@@ -1,6 +1,6 @@
 "use client";
 
-import { ProductData } from "@/components/Modals/AddProductModal/AddProductModal";
+import { ProductData } from "app/Hooks/useProductForm";
 import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from "react";
 
 // Define the context for ProductEditModal

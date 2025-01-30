@@ -20,7 +20,6 @@ const Variants = ({
 }: VariantsProps) => {
   return (
     <div
-    
     style={{
         padding: "1em",
         border: "1px solid #8080802e",
@@ -29,7 +28,7 @@ const Variants = ({
     >
       <h2 className="text-sm font-medium mb-2">Variants</h2>
       {variants.map((variant, index) => (
-        <div key={index} className="flex space-x-2 mb-2">
+        <div key={index} className=" flex-wrap flex space-y-2 mb-2">
           <input
             type="text"
             placeholder="Key (e.g., Color)"

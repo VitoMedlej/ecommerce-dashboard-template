@@ -31,5 +31,5 @@ export const useProductVariants = () => {
     setVariants([]);
   };
 
-  return { variants, addVariant, updateVariant, deleteVariant, resetVariants };
+  return { variants, addVariant, updateVariant, deleteVariant, resetVariants, setVariants };
 };

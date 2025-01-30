@@ -10,7 +10,7 @@ import { Categories, fetchSanityCategories } from 'utils/SanityFunctions';
 
 export default async function ProductsPage(
   props: {
-    searchParams: Promise<{ q: string; offset: string }>;
+    searchParams: Promise<{ q: string; offset: string; revalidate: string }>;
   }
 ) {
   const session = await auth();
@@ -21,11 +21,12 @@ export default async function ProductsPage(
 
   const searchParams = await props.searchParams;
   const search = searchParams.q ?? '';
+  const revalidate = searchParams.revalidate ?? '';
   const offset = searchParams.offset ?? 0;
 
   let productsData, categoriesData;
   try {
-    productsData = await getProducts(search, Number(offset));
+    productsData = await getProducts(search, Number(offset), revalidate === 'false' ? 0 : 10);
   } catch (error : any) {
     console.error('Error loading products:', error.message || error);
     productsData = { products: [], newOffset: null, totalProducts: 0 };

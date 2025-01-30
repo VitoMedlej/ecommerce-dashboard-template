@@ -37,7 +37,7 @@ export const useOrderManagement = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const apiUrl = `${process.env.NEXT_PUBLIC_EXTERNAL_API_URL}/dashboard/order`;
+  const apiUrl = `${process.env.NEXT_PUBLIC_EXTERNAL_API_URL}/api/order/`;
 
   // Function to handle changes in input fields (form fields)
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {

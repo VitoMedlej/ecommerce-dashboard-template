@@ -1,7 +1,7 @@
 import React from 'react';
 import * as Form from "@radix-ui/react-form";
-import {   ProductData } from '../Modals/AddProductModal/AddProductModal';
 import { Categories } from 'utils/SanityFunctions';
+import { ProductData } from 'app/Hooks/useProductForm';
 
 
 
@@ -21,7 +21,7 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({ categories, product
         <Form.Label className="block text-sm pb-1 font-medium">Category</Form.Label>
         <select
           name="category"
-          value={productData.category}
+          value={productData.category as string}
           onChange={handleChange}
           className="w-full p-2 border rounded"
         >
@@ -39,7 +39,7 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({ categories, product
           <Form.Label className="block text-sm pb-1 font-medium">Subcategory</Form.Label>
           <select
             name="subcategory"
-            value={productData.subcategory}
+            value={productData.subcategory as string}
             onChange={handleChange}
             className="w-full p-2 border rounded"
           >

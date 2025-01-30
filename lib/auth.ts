@@ -10,11 +10,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        console.log('credentials: ', credentials);
         
         try {
           const response = await fetch(
-            `${process.env.EXTERNAL_API_URL}/dashboard/auth/login`,
+            `${process.env.EXTERNAL_API_URL}/api/dashboard/auth/login`,
             {
               method: 'POST',
               headers: {
@@ -29,7 +28,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
           const data = await response.json();
 
-          console.log('data: ', data);
           if ( data?.responseObject?.user && data?.responseObject?.token) {
             return data?.responseObject;
           }

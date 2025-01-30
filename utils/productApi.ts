@@ -1,6 +1,7 @@
 'use server'
 
-import {ProductData} from "@/components/Modals/AddProductModal/AddProductModal";
+import { ProductData } from "app/Hooks/useProductForm";
+
 
 interface ProductResponse {
     error?: any;
@@ -10,8 +11,7 @@ interface ProductResponse {
 
 const addProduct = async(product : ProductData) : Promise < ProductResponse > => {
     try {
-        console.log('NEXT_PUBLIC_EXTERNAL_API_URL: ', process.env.NEXT_PUBLIC_EXTERNAL_API_URL);
-        const response = await fetch(`${process.env.NEXT_PUBLIC_EXTERNAL_API_URL}/dashboard/product/add`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_EXTERNAL_API_URL}/api/dashboard/product/add`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -39,7 +39,7 @@ const addProduct = async(product : ProductData) : Promise < ProductResponse > =>
 
 const editProduct = async(productId : string, product : ProductData) : Promise < ProductResponse > => {
     try {
-        const response = await fetch(`${process.env.EXTERNAL_API_URL}/dashboard/product/update/${productId}`, {
+        const response = await fetch(`${process.env.EXTERNAL_API_URL}/api/dashboard/product/update/${productId}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",

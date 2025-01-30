@@ -9,13 +9,14 @@ import ImageUploader from "@/components/Cloudinary/ImageUploader";
 import { editProduct } from "utils/productApi";
 import { Categories } from "utils/SanityFunctions";
 import Variants from "../Variants";
-import { useProductVariants } from "app/Hooks/useProductVariants";
+import { useProductVariants, Variant } from "app/Hooks/useProductVariants";
 
 const ProductEditModal = ({ data, categories }: { data: ProductData | null; categories : Categories  }) => {
   if (!data) return <></>;
 
 
   const { isProductEditModalOpen, setIsProductEditModalOpen } = useProductEditModalContext();
+  const  { variants, addVariant, updateVariant, deleteVariant, resetVariants, setVariants }  = useProductVariants();
   const { productData, handleChange, uploadedImages, setUploadedImages, resetForm } = useProductForm(data, true);
    const { setCurrentProduct } = useCurrentProductContext();
  
@@ -34,8 +35,6 @@ const ProductEditModal = ({ data, categories }: { data: ProductData | null; cate
       alert(`${error}`);
     }
   };
-  const  { variants, addVariant, updateVariant, deleteVariant, resetVariants }  = useProductVariants();
-  console.log('variants: ', variants);
 
   return (
     <Dialog.Root open={isProductEditModalOpen} onOpenChange={setIsProductEditModalOpen}>
@@ -76,9 +75,9 @@ const ProductEditModal = ({ data, categories }: { data: ProductData | null; cate
           ))}
                  <CategorySelector handleChange={handleChange} productData={productData}  categories={categories} />
 
-
-
-                { <Variants deleteVariant={deleteVariant} updateVariant={updateVariant} resetVariants={resetVariants} variants={variants} addVariant={addVariant}  />}
+                { <Variants deleteVariant={deleteVariant} updateVariant={updateVariant}
+                 resetVariants={resetVariants} 
+                 variants={data.variants as Variant[] ?? variants} addVariant={addVariant}  />}
 
           <ImageUploader uploadedImages={uploadedImages} setUploadedImages={setUploadedImages} />
           <div className="flex justify-end space-x-4 mt-4">

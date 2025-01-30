@@ -1,4 +1,4 @@
-import { ProductData } from "@/components/Modals/AddProductModal/AddProductModal";
+import { ProductData } from "app/Hooks/useProductForm";
 
 export type IProduct = {
   _id: string;
@@ -15,7 +15,8 @@ export type IProduct = {
 
 export async function getProducts(
   search: string,
-  offset: number
+  offset: number,
+  revalidate: number
 ): Promise<{
   products: ProductData[];
   newOffset: number | null;
@@ -24,13 +25,13 @@ export async function getProducts(
   const defaultResponse = { products: [], newOffset: null, totalProducts: 0 };
 
   try {
-    const response = await fetch(`${process.env.EXTERNAL_API_URL}/dashboard/fetch-products?search=${search}&offset=${offset}`, {
+    const response = await fetch(`${process.env.EXTERNAL_API_URL}/api/dashboard/fetch-products?search=${search}&offset=${offset}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${process.env.TKN}`,
       },
-      next: {revalidate: 0}
+      next: {revalidate: revalidate ?? 10}
     });
 
     if (response.status !== 200) {
@@ -53,7 +54,7 @@ export async function getProducts(
 export async function deleteProductById(id: string): Promise<boolean> {
   try {
      
-    const response = await fetch(`${process.env.EXTERNAL_API_URL || process.env.EXTERNAL_API_URL}/products/dashboard/${id}`, {
+    const response = await fetch(`${process.env.EXTERNAL_API_URL || process.env.EXTERNAL_API_URL}/api/products/dashboard/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

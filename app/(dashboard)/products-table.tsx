@@ -16,18 +16,16 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { Product } from './product';
-
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { IProduct } from '@/lib/db';
 import { useCurrentProductContext } from 'app/context/ContextProvider';
 import { useEffect, useState } from 'react';
-import AddProductModal, { ProductData } from '@/components/Modals/AddProductModal/AddProductModal';
-
+import AddProductModal from '@/components/Modals/AddProductModal/AddProductModal';
 import { Categories } from 'utils/SanityFunctions';
 import EditProductModal from '@/components/Modals/EditProductModal/EditProductModal';
 import { deleteProduct } from './actions';
+import { ProductData } from 'app/Hooks/useProductForm';
 
 export function ProductsTable({
   products,
@@ -42,7 +40,7 @@ export function ProductsTable({
 }) {
   let router = useRouter();
   
-  let productsPerPage = 5;
+  let productsPerPage = 12;
   const { currentProduct } = useCurrentProductContext();
   const [currentProducts, setCurrentProducts] = useState(products);
 
@@ -95,16 +93,15 @@ useEffect(() => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="hidden w-[100px] sm:table-cell">
-                <span className="sr-only">Image</span>
+              <TableHead className="">
+                <span className="">Image</span>
               </TableHead>
               <TableHead>Name</TableHead>
               <TableHead>
-                
-                 | Qty</TableHead>
+                 Stock</TableHead>
               <TableHead className="hidden md:table-cell">Price</TableHead>
               <TableHead className="hidden md:table-cell">
-                Total Sales
+                Category
               </TableHead>
               <TableHead className="hidden md:table-cell">Category</TableHead>
               <TableHead>
