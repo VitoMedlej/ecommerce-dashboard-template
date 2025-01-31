@@ -26,6 +26,7 @@ import { Categories } from 'utils/SanityFunctions';
 import EditProductModal from '@/components/Modals/EditProductModal/EditProductModal';
 import { deleteProduct } from './actions';
 import { ProductData } from 'app/Hooks/useProductForm';
+import { SearchInput } from './search';
 
 export function ProductsTable({
   products,
@@ -74,6 +75,12 @@ useEffect(() => {
   );
 }, [currentProduct]);
 
+useEffect(()=>{
+  if (products) {
+    setCurrentProducts(products)
+  }
+},[products])
+
   function prevPage() {
     router.back();
   }
@@ -85,9 +92,10 @@ useEffect(() => {
     <Card>
       <CardHeader>
         <CardTitle>Products</CardTitle>
-        <CardDescription>
+        <CardDescription className='pb-2'>
           Manage your products and view their sales performance.
         </CardDescription>
+        <SearchInput/>
       </CardHeader>
     {currentProducts && currentProducts?.length > 0 ?  <CardContent>
         <Table>

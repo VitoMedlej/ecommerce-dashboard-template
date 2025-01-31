@@ -18,33 +18,34 @@ export default async function OrdersPage() {
     // Redirect or render unauthorized UI
     redirect('/login'); // Ensure `redirect` is imported if used
   }
-  const orders = await fetchOrders()
+  const orders = await fetchOrders(0,12, 20 )
   return (
-    <div className="p-4">
-      <Card>
-        <CardHeader>
-          <CardTitle>Orders</CardTitle>
-          <CardDescription>View and manage all orders.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Table>
+    <div className="p-4 max-w-full overflow-x-auto">
+    <Card>
+      <CardHeader>
+        <CardTitle>Orders</CardTitle>
+        <CardDescription>View and manage all orders.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="overflow-x-auto">
+          <Table className="w-full min-w-[600px] md:min-w-full">
             <TableHeader>
-              <TableRow>
+              <TableRow className=" md:table-row">
                 <TableHead>Customer</TableHead>
-                <TableHead>Total (After Discount)</TableHead>
-                <TableHead>Shipping Cost</TableHead>
+                <TableHead>Total</TableHead>
+                <TableHead>Shipping</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Order Date</TableHead>
-                <TableHead>
-                  <span className="sr-only">Actions</span>
-                </TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
-           <OrdersTableBody data={orders}/>
+            <OrdersTableBody data={orders} />
           </Table>
-        </CardContent>
-        <CardFooter>
-         {!orders?.error && orders?.total > 0 &&  <div className="flex justify-between items-center w-full">
+        </div>
+      </CardContent>
+      <CardFooter>
+        {!orders?.error && orders?.total > 0 && (
+          <div className="flex flex-col sm:flex-row justify-between items-center w-full gap-2">
             <div className="text-xs text-muted-foreground">
               Showing <strong>1-{orders.orders.length}</strong> of <strong>{orders.total}</strong> orders
             </div>
@@ -56,9 +57,10 @@ export default async function OrdersPage() {
                 Next <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
-          </div>}
-        </CardFooter>
-      </Card>
-    </div>
+          </div>
+        )}
+      </CardFooter>
+    </Card>
+  </div>
   );
 }

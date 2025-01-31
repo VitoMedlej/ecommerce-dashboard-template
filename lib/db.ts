@@ -54,7 +54,8 @@ export async function getProducts(
 export async function deleteProductById(id: string): Promise<boolean> {
   try {
      
-    const response = await fetch(`${process.env.EXTERNAL_API_URL || process.env.EXTERNAL_API_URL}/api/products/dashboard/${id}`, {
+    console.log('deleting product ', `${process.env.NEXT_PUBLIC_EXTERNAL_API_URL}/api/dashboard/delete/${id}`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_EXTERNAL_API_URL}/api/dashboard/delete/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -69,6 +70,7 @@ export async function deleteProductById(id: string): Promise<boolean> {
     return true;
   } catch (error) {
     console.error('Error deleting product:', error);
+    alert('Error deleting product')
     return false;
   }
 }

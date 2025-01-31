@@ -27,6 +27,8 @@ export default async function ProductsPage(
   let productsData, categoriesData;
   try {
     productsData = await getProducts(search, Number(offset), revalidate === 'false' ? 0 : 10);
+    console.log('search: ', search);
+    console.log('productsData: ', productsData);
   } catch (error : any) {
     console.error('Error loading products:', error.message || error);
     productsData = { products: [], newOffset: null, totalProducts: 0 };
@@ -45,6 +47,7 @@ export default async function ProductsPage(
     <>
       <Tabs defaultValue="all">
         <DashboardOptions />
+
         <TabsContent value="all">
            
             <ProductsTable

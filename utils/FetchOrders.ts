@@ -8,7 +8,8 @@ export interface FetchOrdersResponse {
   
   export const fetchOrders = async (
     page: number = 1,
-    limit: number = 10
+    limit: number = 10,
+    revalidate : number = 20,
   ): Promise<FetchOrdersResponse> => {
     const token = process.env.TKN;
     const url = `${process.env.EXTERNAL_API_URL}/api/dashboard/fetch-orders?page=${page}&limit=${limit}`;
@@ -24,6 +25,7 @@ export interface FetchOrdersResponse {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",
         },
+        next :{revalidate} 
       });
   
       if (!response.ok) {
