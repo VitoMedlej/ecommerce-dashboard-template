@@ -11,7 +11,7 @@ export interface FetchOrdersResponse {
     limit: number = 10
   ): Promise<FetchOrdersResponse> => {
     const token = process.env.TKN;
-    const url = `${process.env.EXTERNAL_API_URL}/api/dashboard/order?page=${page}&limit=${limit}`;
+    const url = `${process.env.EXTERNAL_API_URL}/api/dashboard/fetch-orders?page=${page}&limit=${limit}`;
     
     if (!token) {
       return { error: "Bearer token is missing", orders: [], total: 0 };
@@ -32,13 +32,13 @@ export interface FetchOrdersResponse {
   
       const data = await response.json();
   
-      if (!data || !data.orders) {
+      if (!data || !data.responseObject.data) {
         return { error: "Invalid data structure returned", orders: [], total: 0 };
       }
   
       return {
-        orders: data.orders,
-        total: data.total || 0,
+        orders: data.responseObject.data,
+        total: data.responseObject.total || 0,
       };
     } catch (error: any) {
       console.error("Error fetching orders:", error);
