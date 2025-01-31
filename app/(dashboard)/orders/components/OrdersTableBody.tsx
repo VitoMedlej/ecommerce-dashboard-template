@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { FetchOrdersResponse } from 'utils/FetchOrders';
 import Image from 'next/image';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { DeleteOrder } from '@/lib/db';
 
 export const getValidImage = (images: string[]) => {
   return Array.isArray(images) && images?.length > 0
@@ -26,6 +27,7 @@ const OrdersTableBody = ({ data }: { data: FetchOrdersResponse }) => {
   const toggleOrderDetails = (orderId: string) => {
     setExpandedOrderId(prevId => (prevId === orderId ? null : orderId));
   };
+  
 
   return (
     <TableBody>
@@ -51,6 +53,7 @@ const OrdersTableBody = ({ data }: { data: FetchOrdersResponse }) => {
             </TableCell>
             <TableCell>{order.orderDate}</TableCell>
             <TableCell className="text-right space-x-2">
+              <Button variant="outline" size="sm" className='text-red-500' onClick={() => DeleteOrder(order.id)}>Delete</Button>
               {/* <Button variant="outline" size="sm" onClick={() => editOrder(order)}>Edit</Button> */}
               <Button variant="outline" size="sm" onClick={() => toggleOrderDetails(order.id)}>
                 {expandedOrderId === order.id ? "Hide" : "Show"} Products

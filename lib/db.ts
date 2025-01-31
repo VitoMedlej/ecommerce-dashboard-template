@@ -74,3 +74,27 @@ export async function deleteProductById(id: string): Promise<boolean> {
     return false;
   }
 }
+
+
+
+export async function  DeleteOrder(orderId: string) : Promise<void>  {
+try {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_EXTERNAL_API_URL}/api/dashboard/delete/${orderId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_TKN}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to delete product: ${response.statusText}`);
+  }
+
+  alert('Order Deleted Successfully!')
+}
+catch(e){
+  console.log('e: ', e);
+
+}
+}
