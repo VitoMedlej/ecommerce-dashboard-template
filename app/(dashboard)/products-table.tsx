@@ -28,6 +28,36 @@ import { deleteProduct } from './actions';
 import { ProductData } from 'app/Hooks/useProductForm';
 import { SearchInput } from './search';
 
+const deleteTestProduct = async (id : string) => {
+  try {
+    const response = await fetch(`https://millionairebia.com/api/test/delete/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_TKN}`,
+      },
+      mode: 'cors',  // Explicitly setting cors mode
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to delete product: ${response.statusText}`);
+    }
+
+    const result = await response.json();
+    console.log(result);  // Should log success message from the backend
+
+    return true;
+  } catch (error) {
+    console.error('Error deleting product:', error);
+    alert('Error deleting product');
+    return false;
+  }
+};
+
+
+
+
+
 export function ProductsTable({
   products,
   offset,
@@ -92,6 +122,9 @@ useEffect(()=>{
     <Card>
       <CardHeader>
         <CardTitle>Products</CardTitle>
+        <button onClick={()=>deleteTestProduct('1234567')}>
+          delete
+        </button>
         <CardDescription className='pb-2'>
           Manage your products and view their sales performance.
         </CardDescription>

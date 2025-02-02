@@ -29,7 +29,7 @@ export async function getProducts(
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.TKN}`,
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_TKN}`,
       },
       next: {revalidate: revalidate ?? 10}
     });
@@ -55,7 +55,7 @@ export async function deleteProductById(id: string): Promise<boolean> {
   try {
      
     console.log('deleting product ', `${process.env.NEXT_PUBLIC_EXTERNAL_API_URL}/api/dashboard/product/delete/${id}`);
-    const response = await fetch(`${process.env.NEXT_PUBLIC_EXTERNAL_API_URL}/api/dashboard/product/delete/${id}`, {
+    const response = await fetch(`${process.env.EXTERNAL_API_URL}/api/dashboard/product/delete/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -66,6 +66,7 @@ export async function deleteProductById(id: string): Promise<boolean> {
     if (!response.ok) {
       throw new Error(`Failed to delete product: ${response.statusText}`);
     }
+    console.log('response: ', response);
 
     return true;
   } catch (error) {
